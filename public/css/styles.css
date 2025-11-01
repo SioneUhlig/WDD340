@@ -1,6 +1,266 @@
-/******* Change Box Model ***************/
+
 *,
 *:before,
 *:after {
   box-sizing: border-box;
+}
+
+body, h1, h2, h3, p, ul, li {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: url('/images/site/small_check.jpg') repeat;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  padding: 25px;
+ border: black solid 5px;
+}
+
+#wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: white;
+  position: relative;
+  padding: 0;
+   border: 3px solid #00FFEF;
+}
+
+
+#top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background-color: white;
+  border-bottom: 3px solid #00FFEF;
+}
+
+.siteName {
+  font-size: 28px;
+  font-weight: bold;
+  color: black;
+}
+
+.siteName a {
+  text-decoration: none;
+  color: black;
+}
+
+#tools a {
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+}
+
+#tools a:hover {
+  color: #00bcd4;
+}
+
+nav {
+  background-color: #3a4750;
+  padding: 0;
+}
+
+nav ul {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  padding: 15px 20px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+nav li:hover {
+  background-color: black;
+}
+
+main {
+  padding: 30px;
+  min-height: 500px;
+}
+
+h1 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: black;
+  padding-bottom: 50px;
+}
+
+.hero-content {
+  position: relative;
+  display: block;
+}
+
+.hero-text {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 30px;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  max-width: 200px;
+}
+
+.car-name {
+  font-size: 40px;
+  color: #0190a3;
+  margin-bottom: 15px;
+}
+
+.features {
+  font-size: 25px;
+  color: #0000ff;
+  margin-bottom: 20px;
+  line-height: 1;
+}
+
+.features li {
+  margin-bottom: 5px;
+}
+
+.cta-button {
+  background-color: #00bcd4;
+  color: black;
+  border: none;
+  padding: 15px 40px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.cta-button:hover {
+  background-color: #0097a7;
+}
+
+.hero-image {
+  width: 100%;
+  text-align: center;
+  padding-left: 100px;
+}
+
+.hero-image img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.content-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.upgrades-section h2,
+.reviews-section h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: black;
+  padding-top: 50px;
+}
+
+.upgrades-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.upgrade-item {
+  background-color: #00FFEF;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.upgrade-item:hover {
+  background-color: #00FFEF;
+}
+
+.upgrade-item img {
+  width: 80px;
+  height: 80px;
+  background-color: white;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.upgrade-item p {
+  color: #0000ff;
+  font-size: 14px;
+  font-weight: bold;
+}
+.reviews-list {
+  list-style: none;
+}
+
+.reviews-list li {
+  margin-bottom: 15px;
+  padding-left: 20px;
+  position: relative;
+  color: black;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.reviews-list li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: black;
+  font-weight: bold;
+}
+
+footer {
+  background-color: #3a4750;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  margin-top: 40px;
+}
+
+.copyright {
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+
+  body {
+    background: aliceblue;
+  }
+  #wrapper {
+    border-width: 0px;
+  }
+
+  .hero-content {
+    flex-direction: column;
+  }
+
+  .content-sections {
+    grid-template-columns: 1fr;
+  }
+
+  nav ul {
+    flex-direction: row;
+  }
+
+  #top-header {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
