@@ -1,0 +1,31 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "WDD340SioneUhlig",
+            "connectString": "postgresql://sioneuhligwdd340:gzRUi17lWwSsgZt8d7ByhDYIHBjUnbnB@dpg-d41cqfre5dus73d7i21g-a.oregon-postgres.render.com/sioneuhligwdd340"
+        },
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true,
+                    "requestCert": false
+                }
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "WDD340SU",
+            "connectString": "postgresql://sioneuhligwdd340:gzRUi17lWwSsgZt8d7ByhDYIHBjUnbnB@dpg-d41cqfre5dus73d7i21g-a.oregon-postgres.render.com/sioneuhligwdd340"
+        }
+    ]
+}
