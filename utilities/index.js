@@ -24,8 +24,6 @@ Util.getNav = async function (req, res, next) {
   return list
 }
 
-module.exports = Util
-
 /* **************************************
 * Build the classification view HTML
 * ************************************ */
@@ -37,7 +35,7 @@ Util.buildClassificationGrid = async function(data){
       grid += '<li>'
       grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
       + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
-      + 'details"><img src="' + vehicle.inv_thumbnail 
+      + ' details"><img src="' + vehicle.inv_thumbnail 
       +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
       +' on CSE Motors" /></a>'
       grid += '<div class="namePrice">'
@@ -58,3 +56,41 @@ Util.buildClassificationGrid = async function(data){
   }
   return grid
 }
+
+/* **************************************
+* Build the vehicle detail view HTML
+* ************************************ */
+Util.buildDetailView = async function(vehicle){
+  let detailHTML = '<div class="vehicle-detail">'
+  
+  // Left side - Image
+  detailHTML += '<div class="vehicle-image">'
+  detailHTML += `<img src="${vehicle.inv_image}" alt="${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}">`
+  detailHTML += '</div>'
+  
+  // Right side - Details box
+  detailHTML += '<div class="vehicle-details-box">'
+  detailHTML += `<h2>${vehicle.inv_make} ${vehicle.inv_model} Details</h2>`
+  
+  detailHTML += `<p class="detail-item"><strong>Price:</strong> $${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</p>`
+  
+  detailHTML += `<p class="detail-item"><strong>Description:</strong> ${vehicle.inv_description}</p>`
+  
+  detailHTML += `<p class="detail-item"><strong>Color:</strong> ${vehicle.inv_color}</p>`
+  
+  detailHTML += `<p class="detail-item"><strong>Miles:</strong> ${new Intl.NumberFormat('en-US').format(vehicle.inv_miles)}</p>`
+  
+  detailHTML += '</div>'
+  detailHTML += '</div>'
+  
+  return detailHTML
+}
+
+/* ****************************************
+ * Middleware For Handling Errors
+ * Wrap other function in this for 
+ * General Error Handling
+ **************************************** */
+Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
+
+module.exports = Util
