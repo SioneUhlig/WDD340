@@ -634,7 +634,7 @@ footer a:hover {
   max-width: 400px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: #f9f9f9;
+  background-color: #3a4750;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -648,14 +648,14 @@ footer a:hover {
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 1rem;
-  color: #333;
+  color: white;
 }
 
 #loginForm label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #555;
+  color: white;
 }
 
 #loginForm input[type="email"],
@@ -704,5 +704,112 @@ footer a:hover {
 }
 
 #loginForm + p a:hover {
+  text-decoration: underline;
+}
+
+/* Registration Form Styles */
+#registrationForm {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #3a4750;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#registrationForm fieldset {
+  border: none;
+  padding: 0;
+}
+
+#registrationForm legend {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+#registrationForm label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: white;
+}
+
+#registrationForm input[type="text"],
+#registrationForm input[type="email"],
+#registrationForm input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+#registrationForm input:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+#registrationForm .submit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+#registrationForm .submit-btn:hover {
+  background-color: #45a049;
+}
+
+#showPassword {
+  padding: 0.5rem 1rem;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+#showPassword:hover {
+  background-color: #0b7dda;
+}
+
+.password-requirements {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  padding: 0.75rem;
+  background-color: #fff3cd;
+  border-left: 3px solid #ffc107;
+  border-radius: 4px;
+}
+
+#registrationForm + p {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+#registrationForm + p a {
+  color: #4CAF50;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#registrationForm + p a:hover {
   text-decoration: underline;
 }
