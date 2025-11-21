@@ -813,3 +813,39 @@ footer a:hover {
 #registrationForm + p a:hover {
   text-decoration: underline;
 }
+
+/* Password note styling */
+.password-note {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background-color: #e3f2fd;
+  border-left: 3px solid #2196F3;
+  border-radius: 3px;
+}
+
+/* HTML5 Validation Styles */
+input:required:invalid,
+input:focus:invalid {
+  border-color: #f44336;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="%23f44336" stroke-width="2"/><line x1="10" y1="6" x2="10" y2="11" stroke="%23f44336" stroke-width="2"/><circle cx="10" cy="14" r="1" fill="%23f44336"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+}
+
+input:required:valid {
+  border-color: #4CAF50;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="none" stroke="%234CAF50" stroke-width="2" d="M5 10 l3 3 l7-7"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+}
+
+/* Override validation icons when input is empty and not focused */
+input:required:invalid:not(:focus):placeholder-shown {
+  border-color: #ddd;
+  background-image: none;
+}
