@@ -849,3 +849,193 @@ input:required:invalid:not(:focus):placeholder-shown {
   border-color: #ddd;
   background-image: none;
 }
+
+/* Inventory Form Styles */
+.form-instruction {
+  background-color: #00FFEF;
+  padding: 15px;
+  margin: 20px 0;
+  font-weight: bold;
+  text-align: center;
+  color: #3a4750;
+  border-radius: 5px;
+}
+
+.inventory-form {
+  background-color: #3a4750;
+  border: none;
+  padding: 30px;
+  border-radius: 5px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.inventory-form label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: white;
+  font-size: 16px;
+}
+
+.inventory-form label:first-of-type {
+  margin-top: 0;
+}
+
+.inventory-form input[type="text"],
+.inventory-form input[type="number"],
+.inventory-form select,
+.inventory-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: white;
+}
+
+.inventory-form input::placeholder,
+.inventory-form textarea::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.inventory-form textarea {
+  resize: vertical;
+  font-family: Arial, sans-serif;
+}
+
+.inventory-form select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+  padding-right: 40px;
+}
+
+.inventory-form .submit-btn {
+  width: 100%;
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.inventory-form .submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Management Links Styles */
+.management-links {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.management-links h2 {
+  color: #3a4750;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.management-links p {
+  margin: 15px 0;
+}
+
+.management-links a {
+  display: inline-block;
+  padding: 12px 25px;
+  background-color: #00FFEF;
+  color: #3a4750;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.management-links a:hover {
+  background-color: #00bcd4;
+}
+
+/* Add Classification Form Styles */
+.form-note {
+  background-color: #fff3cd;
+  border-left: 3px solid #ffc107;
+  padding: 10px;
+  margin-bottom: 15px;
+  color: #856404;
+  font-size: 14px;
+}
+
+#addClassificationForm {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #00FFEF;
+  border-radius: 8px;
+}
+
+#addClassificationForm fieldset {
+  border: none;
+  padding: 0;
+}
+
+#addClassificationForm legend {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #3a4750;
+}
+
+#addClassificationForm label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #3a4750;
+}
+
+#addClassificationForm input[type="text"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+#addClassificationForm input:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+#addClassificationForm .submit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+#addClassificationForm .submit-btn:hover {
+  background-color: #45a049;
+}
