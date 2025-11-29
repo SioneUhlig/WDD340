@@ -1,38 +1,73 @@
 const { body, validationResult } = require("express-validator")
+const accountModel = require("../models/account-model")
 const utilities = require(".")
-const invModel = require("../models/inventory-model")
 const validate = {}
 
 /*  **********************************
- *  Classification Validation Rules
+ *  Registration Data Validation Rules
  * ********************************* */
-validate.classificationRules = () => {
+validate.registrationRules = () => {
   return [
-    // classification_name is required and must not contain spaces or special characters
-    body("classification_name")
+    // firstname is required and must be string
+    body("account_firstname")
       .trim()
+      .escape()
       .notEmpty()
       .isLength({ min: 1 })
-      .withMessage("Classification name is required.")
-      .matches(/^[a-zA-Z0-9]+$/)
-      .withMessage("Classification name cannot contain spaces or special characters."),
+      .withMessage("Please provide a first name."),
+
+    // lastname is required and must be string
+    body("account_lastname")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isLength({ min: 2 })
+      .withMessage("Please provide a last name."),
+
+    // valid email is required and cannot already exist in the database
+    body("account_email")
+      .trim()
+      .isEmail()
+      .normalizeEmail() // refer to validator.js docs
+      .withMessage("A valid email is required.")
+      .custom(async (account_email) => {
+        const emailExists = await accountModel.checkExistingEmail(account_email)
+        if (emailExists){
+          throw new Error("Email exists. Please log in or use different email")
+        }
+      }),
+
+    // password is strong password
+    body("account_password")
+      .trim()
+      .notEmpty()
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+      .withMessage("Password does not meet requirements."),
   ]
 }
 
 /* ******************************
- * Check classification data and return errors or continue
+ * Check data and return errors or continue to registration
  * ***************************** */
-validate.checkClassificationData = async (req, res, next) => {
-  const { classification_name } = req.body
+validate.checkRegData = async (req, res, next) => {
+  const { account_firstname, account_lastname, account_email } = req.body
   let errors = []
   errors = validationResult(req)
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav()
-    res.render("inventory/add-classification", {
+    res.render("account/register", {
       errors,
-      title: "Add New Classification",
+      title: "Registration",
       nav,
-      classification_name,
+      account_firstname,
+      account_lastname,
+      account_email,
     })
     return
   }
@@ -40,103 +75,147 @@ validate.checkClassificationData = async (req, res, next) => {
 }
 
 /*  **********************************
- *  Inventory Validation Rules
+ *  Login Data Validation Rules
  * ********************************* */
-validate.inventoryRules = () => {
+validate.loginRules = () => {
   return [
-    // classification_id is required
-    body("classification_id")
+    // valid email is required
+    body("account_email")
       .trim()
-      .notEmpty()
-      .withMessage("Please select a classification."),
+      .isEmail()
+      .normalizeEmail()
+      .withMessage("A valid email is required."),
 
-    // inv_make is required
-    body("inv_make")
+    // password is required
+    body("account_password")
       .trim()
       .notEmpty()
-      .isLength({ min: 3 })
-      .withMessage("Make is required and must be at least 3 characters."),
-
-    // inv_model is required
-    body("inv_model")
-      .trim()
-      .notEmpty()
-      .isLength({ min: 3 })
-      .withMessage("Model is required and must be at least 3 characters."),
-
-    // inv_year is required and must be 4 digits
-    body("inv_year")
-      .trim()
-      .notEmpty()
-      .matches(/^\d{4}$/)
-      .withMessage("Year must be a 4-digit number."),
-
-    // inv_description is required
-    body("inv_description")
-      .trim()
-      .notEmpty()
-      .withMessage("Description is required."),
-
-    // inv_image is required
-    body("inv_image")
-      .trim()
-      .notEmpty()
-      .withMessage("Image path is required."),
-
-    // inv_thumbnail is required
-    body("inv_thumbnail")
-      .trim()
-      .notEmpty()
-      .withMessage("Thumbnail path is required."),
-
-    // inv_price is required and must be a positive number
-    body("inv_price")
-      .trim()
-      .notEmpty()
-      .isFloat({ min: 0 })
-      .withMessage("Price must be a positive number."),
-
-    // inv_miles is required and must be a positive integer
-    body("inv_miles")
-      .trim()
-      .notEmpty()
-      .isInt({ min: 0 })
-      .withMessage("Miles must be a positive number."),
-
-    // inv_color is required
-    body("inv_color")
-      .trim()
-      .notEmpty()
-      .withMessage("Color is required."),
+      .withMessage("Password is required."),
   ]
 }
 
 /* ******************************
- * Check inventory data and return errors or continue
+ * Check data and return errors or continue to login
  * ***************************** */
-validate.checkInventoryData = async (req, res, next) => {
-  const { classification_id, inv_make, inv_model, inv_year, inv_description, 
-          inv_image, inv_thumbnail, inv_price, inv_miles, inv_color } = req.body
+validate.checkLoginData = async (req, res, next) => {
+  const { account_email } = req.body
   let errors = []
   errors = validationResult(req)
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav()
-    let classificationList = await utilities.buildClassificationList(classification_id)
-    res.render("inventory/add-inventory", {
+    res.render("account/login", {
       errors,
-      title: "Add New Vehicle",
+      title: "Login",
       nav,
-      classificationList,
-      classification_id,
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_description,
-      inv_image,
-      inv_thumbnail,
-      inv_price,
-      inv_miles,
-      inv_color,
+      account_email,
+    })
+    return
+  }
+  next()
+}
+
+/*  **********************************
+ *  Account Update Validation Rules
+ * ********************************* */
+validate.updateAccountRules = () => {
+  return [
+    // firstname is required and must be string
+    body("account_firstname")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isLength({ min: 1 })
+      .withMessage("Please provide a first name."),
+
+    // lastname is required and must be string
+    body("account_lastname")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isLength({ min: 2 })
+      .withMessage("Please provide a last name."),
+
+    // valid email is required
+    body("account_email")
+      .trim()
+      .isEmail()
+      .normalizeEmail()
+      .withMessage("A valid email is required.")
+      .custom(async (account_email, { req }) => {
+        const account_id = req.body.account_id
+        const account = await accountModel.getAccountById(account_id)
+        // Check if email is being changed
+        if (account_email !== account.account_email) {
+          const emailExists = await accountModel.checkExistingEmail(account_email)
+          if (emailExists) {
+            throw new Error("Email exists. Please use a different email")
+          }
+        }
+      }),
+  ]
+}
+
+/* ******************************
+ * Check account update data and return errors or continue
+ * ***************************** */
+validate.checkAccountUpdateData = async (req, res, next) => {
+  const { account_firstname, account_lastname, account_email, account_id } = req.body
+  let errors = []
+  errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.render("account/update", {
+      errors,
+      title: "Update Account",
+      nav,
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email,
+    })
+    return
+  }
+  next()
+}
+
+/*  **********************************
+ *  Password Change Validation Rules
+ * ********************************* */
+validate.passwordChangeRules = () => {
+  return [
+    // password is strong password
+    body("account_password")
+      .trim()
+      .notEmpty()
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+      .withMessage("Password does not meet requirements."),
+  ]
+}
+
+/* ******************************
+ * Check password change data and return errors or continue
+ * ***************************** */
+validate.checkPasswordChange = async (req, res, next) => {
+  const { account_id } = req.body
+  let errors = []
+  errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    const accountData = await accountModel.getAccountById(account_id)
+    res.render("account/update", {
+      errors,
+      title: "Update Account",
+      nav,
+      account_id: accountData.account_id,
+      account_firstname: accountData.account_firstname,
+      account_lastname: accountData.account_lastname,
+      account_email: accountData.account_email,
     })
     return
   }

@@ -19,12 +19,39 @@ router.post(
   utilities.handleErrors(accountController.registerAccount)
 );
 
-// Process the login attempt
+// Process the login request
 router.post(
   "/login",
   regValidate.loginRules(),
   regValidate.checkLoginData,
-  utilities.handleErrors(accountController.processLogin)
+  utilities.handleErrors(accountController.accountLogin)
 )
+
+// Default account management route - protected by checkLogin middleware
+router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagement));
+
+// Route to build account update view
+router.get("/update/:account_id", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountUpdate));
+
+// Route to process account update
+router.post(
+  "/update",
+  utilities.checkLogin,
+  regValidate.updateAccountRules(),
+  regValidate.checkAccountUpdateData,
+  utilities.handleErrors(accountController.updateAccount)
+);
+
+// Route to process password change
+router.post(
+  "/change-password",
+  utilities.checkLogin,
+  regValidate.passwordChangeRules(),
+  regValidate.checkPasswordChange,
+  utilities.handleErrors(accountController.changePassword)
+);
+
+// Route to handle logout
+router.get("/logout", utilities.handleErrors(accountController.accountLogout));
 
 module.exports = router;

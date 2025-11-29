@@ -1,7 +1,13 @@
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title %> | Sione Uhlig CSE 340 App</title>
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
+<header id="top-header">
+  <span class="siteName">
+    <a href="/" title="Return to home page">CSE Motors</a>
+  </span>
+  <div id="tools">
+    <% if (locals.loggedin) { %>
+      <a title="Click to view account management" href="/account/">Welcome <%= accountData.account_firstname %></a>
+      <a title="Click to log out" href="/account/logout">Logout</a>
+    <% } else { %>
+      <a title="Click to log in" href="/account/login">My Account</a>
+    <% } %>
+  </div>
+</header>
