@@ -1,0 +1,92 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<div class="inquiry-detail-container">
+  <div class="back-link">
+    <a href="/inquiry/my-inquiries">← Back to My Inquiries</a>
+  </div>
+
+  <div class="inquiry-detail-card">
+    <div class="inquiry-header">
+      <div class="vehicle-section">
+        <img src="<%= inquiry.inv_image %>" alt="<%= inquiry.inv_year %> <%= inquiry.inv_make %> <%= inquiry.inv_model %>">
+        <div class="vehicle-info">
+          <h2><%= inquiry.inv_year %> <%= inquiry.inv_make %> <%= inquiry.inv_model %></h2>
+          <p class="price">$<%= new Intl.NumberFormat('en-US').format(inquiry.inv_price) %></p>
+          <a href="/inv/detail/<%= inquiry.vehicle_id %>" class="view-vehicle-link">View Vehicle Details</a>
+        </div>
+      </div>
+      
+      <div class="status-info">
+        <div class="inquiry-status-badge status-<%= inquiry.inquiry_status %>">
+          <%= inquiry.inquiry_status.charAt(0).toUpperCase() + inquiry.inquiry_status.slice(1) %>
+        </div>
+        <p class="inquiry-date">
+          Submitted: <%= new Date(inquiry.inquiry_date).toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) %>
+        </p>
+      </div>
+    </div>
+
+    <div class="inquiry-content">
+      <div class="message-section">
+        <h3>Your Inquiry</h3>
+        <div class="message-box">
+          <p class="subject"><strong>Subject:</strong> <%= inquiry.inquiry_subject %></p>
+          <p class="message"><strong>Message:</strong></p>
+          <p class="message-text"><%= inquiry.inquiry_message %></p>
+        </div>
+      </div>
+
+      <% if (inquiry.response_message) { %>
+        <div class="response-section">
+          <h3>Response</h3>
+          <div class="response-box">
+            <p class="responder">
+              <strong>From:</strong> <%= inquiry.responder_firstname %> <%= inquiry.responder_lastname %>
+            </p>
+            <p class="response-date">
+              <strong>Date:</strong> <%= new Date(inquiry.response_date).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }) %>
+            </p>
+            <p class="response-message"><%= inquiry.response_message %></p>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="no-response-section">
+          <p class="waiting-message">
+            <i>Your inquiry is pending. We will respond as soon as possible.</i>
+          </p>
+        </div>
+      <% } %>
+    </div>
+
+    <div class="inquiry-actions">
+      <a href="/inquiry/my-inquiries" class="back-btn">Back to My Inquiries</a>
+      <% if (!inquiry.response_message) { %>
+        <a href="/inquiry/vehicle/<%= inquiry.vehicle_id %>" class="edit-btn">Send Follow-up</a>
+      <% } %>
+    </div>
+  </div>
+</div>

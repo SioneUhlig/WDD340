@@ -1,0 +1,81 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<div class="inquiry-container">
+  <div class="vehicle-info-card">
+    <div class="vehicle-image">
+      <img src="<%= vehicleData.inv_image %>" alt="<%= vehicleName %>">
+    </div>
+    <div class="vehicle-details">
+      <h2><%= vehicleName %></h2>
+      <p class="price">$<%= new Intl.NumberFormat('en-US').format(vehicleData.inv_price) %></p>
+      <p><strong>Color:</strong> <%= vehicleData.inv_color %></p>
+      <p><strong>Miles:</strong> <%= new Intl.NumberFormat('en-US').format(vehicleData.inv_miles) %></p>
+    </div>
+  </div>
+
+  <div class="inquiry-form-section">
+    <h2>Send an Inquiry</h2>
+    <p class="form-note">Have questions about this vehicle? Send us an inquiry and we'll get back to you as soon as possible.</p>
+    
+    <form id="inquiryForm" action="/inquiry/submit" method="post">
+      <input type="hidden" name="vehicle_id" value="<%= vehicleData.inv_id %>">
+      
+      <label for="inquiry_subject">Subject:</label>
+      <input type="text" 
+             id="inquiry_subject" 
+             name="inquiry_subject" 
+             required 
+             minlength="5"
+             maxlength="255"
+             placeholder="e.g., Question about pricing, Interested in test drive"
+             value="<%= locals.inquiry_subject || '' %>">
+      
+      <label for="inquiry_message">Message:</label>
+      <textarea id="inquiry_message" 
+                name="inquiry_message" 
+                required 
+                minlength="10"
+                maxlength="2000"
+                rows="8"
+                placeholder="Please provide details about your inquiry..."><%= locals.inquiry_message || '' %></textarea>
+      
+      <div class="character-count">
+        <span id="charCount">0</span> / 2000 characters
+      </div>
+      
+      <button type="submit" class="submit-btn">Send Inquiry</button>
+      <a href="/inv/detail/<%= vehicleData.inv_id %>" class="cancel-btn">Cancel</a>
+    </form>
+  </div>
+</div>
+
+<script>
+// Character counter for message textarea
+const messageTextarea = document.getElementById('inquiry_message');
+const charCount = document.getElementById('charCount');
+
+function updateCharCount() {
+  charCount.textContent = messageTextarea.value.length;
+  if (messageTextarea.value.length > 1900) {
+    charCount.style.color = '#f44336';
+  } else {
+    charCount.style.color = '#666';
+  }
+}
+
+messageTextarea.addEventListener('input', updateCharCount);
+// Initialize on page load
+updateCharCount();
+</script>

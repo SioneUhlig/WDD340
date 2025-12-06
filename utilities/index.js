@@ -104,6 +104,11 @@ Util.buildDetailView = async function(vehicle){
   
   detailHTML += `<p class="detail-item"><strong>Miles:</strong> ${new Intl.NumberFormat('en-US').format(vehicle.inv_miles)}</p>`
   
+  // Add inquiry button
+  detailHTML += '<div class="vehicle-actions" style="margin-top: 20px;">'
+  detailHTML += `<a href="/inquiry/vehicle/${vehicle.inv_id}" class="inquiry-btn" style="display: inline-block; padding: 12px 30px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; transition: background-color 0.3s ease;">Inquire About This Vehicle</a>`
+  detailHTML += '</div>'
+  
   detailHTML += '</div>'
   detailHTML += '</div>'
   

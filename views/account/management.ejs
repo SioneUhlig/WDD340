@@ -16,11 +16,18 @@
   <% if (locals.accountData) { %>
     <h2>Welcome <%= accountData.account_firstname %></h2>
     
-    <p><a href="/account/update/<%= accountData.account_id %>">Update Account Information</a></p>
+    <div class="management-links" style="margin-top: 30px;">
+      <h3>Account Actions</h3>
+      <p><a href="/account/update/<%= accountData.account_id %>">Update Account Information</a></p>
+      <p><a href="/inquiry/my-inquiries">View My Inquiries</a></p>
+    </div>
     
     <% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
-      <h3>Inventory Management</h3>
-      <p><a href="/inv/">Manage Inventory</a></p>
+      <div class="management-links" style="margin-top: 30px;">
+        <h3>Employee Tools</h3>
+        <p><a href="/inv/">Manage Inventory</a></p>
+        <p><a href="/inquiry/inbox">Customer Inquiries Inbox</a></p>
+      </div>
     <% } %>
   <% } else { %>
     <p>Please log in to view your account information.</p>

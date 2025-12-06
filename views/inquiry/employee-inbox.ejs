@@ -1,0 +1,184 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<div class="employee-inbox-container">
+  <div class="inbox-stats">
+    <div class="stat-card pending">
+      <h3><%= pendingInquiries.length %></h3>
+      <p>Pending</p>
+    </div>
+    <div class="stat-card responded">
+      <h3><%= respondedInquiries.length %></h3>
+      <p>Responded</p>
+    </div>
+    <div class="stat-card closed">
+      <h3><%= closedInquiries.length %></h3>
+      <p>Closed</p>
+    </div>
+    <div class="stat-card total">
+      <h3><%= allInquiries.length %></h3>
+      <p>Total</p>
+    </div>
+  </div>
+
+  <div class="inbox-tabs">
+    <button class="tab-btn active" onclick="showTab('all')">All Inquiries</button>
+    <button class="tab-btn" onclick="showTab('pending')">Pending (<%= pendingInquiries.length %>)</button>
+    <button class="tab-btn" onclick="showTab('responded')">Responded (<%= respondedInquiries.length %>)</button>
+    <button class="tab-btn" onclick="showTab('closed')">Closed (<%= closedInquiries.length %>)</button>
+  </div>
+
+  <!-- All Inquiries Tab -->
+  <div id="all-tab" class="tab-content active">
+    <% if (allInquiries.length > 0) { %>
+      <div class="inquiries-table-container">
+        <table class="inquiries-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Vehicle</th>
+              <th>Subject</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% allInquiries.forEach(inquiry => { %>
+              <tr class="inquiry-row status-<%= inquiry.inquiry_status %>">
+                <td>
+                  <span class="status-badge status-<%= inquiry.inquiry_status %>">
+                    <%= inquiry.inquiry_status.charAt(0).toUpperCase() + inquiry.inquiry_status.slice(1) %>
+                  </span>
+                </td>
+                <td class="date-cell">
+                  <%= new Date(inquiry.inquiry_date).toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: 'numeric'
+                  }) %>
+                </td>
+                <td>
+                  <strong><%= inquiry.account_firstname %> <%= inquiry.account_lastname %></strong><br>
+                  <small><%= inquiry.account_email %></small>
+                </td>
+                <td>
+                  <%= inquiry.inv_year %> <%= inquiry.inv_make %> <%= inquiry.inv_model %>
+                </td>
+                <td class="subject-cell">
+                  <%= inquiry.inquiry_subject.length > 50 ? inquiry.inquiry_subject.substring(0, 50) + '...' : inquiry.inquiry_subject %>
+                </td>
+                <td class="actions-cell">
+                  <% if (inquiry.inquiry_status === 'pending') { %>
+                    <a href="/inquiry/respond/<%= inquiry.inquiry_id %>" class="action-btn respond-btn">Respond</a>
+                  <% } else { %>
+                    <a href="/inquiry/respond/<%= inquiry.inquiry_id %>" class="action-btn view-btn">View</a>
+                  <% } %>
+                  <form action="/inquiry/update-status" method="post" style="display: inline;">
+                    <input type="hidden" name="inquiry_id" value="<%= inquiry.inquiry_id %>">
+                    <select name="status" onchange="this.form.submit()" class="status-select">
+                      <option value="pending" <%= inquiry.inquiry_status === 'pending' ? 'selected' : '' %>>Pending</option>
+                      <option value="responded" <%= inquiry.inquiry_status === 'responded' ? 'selected' : '' %>>Responded</option>
+                      <option value="closed" <%= inquiry.inquiry_status === 'closed' ? 'selected' : '' %>>Closed</option>
+                    </select>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p class="no-inquiries">No inquiries found.</p>
+    <% } %>
+  </div>
+
+  <!-- Pending Tab -->
+  <div id="pending-tab" class="tab-content">
+    <% if (pendingInquiries.length > 0) { %>
+      <%- renderInquiriesTable(pendingInquiries) %>
+    <% } else { %>
+      <p class="no-inquiries">No pending inquiries.</p>
+    <% } %>
+  </div>
+
+  <!-- Responded Tab -->
+  <div id="responded-tab" class="tab-content">
+    <% if (respondedInquiries.length > 0) { %>
+      <%- renderInquiriesTable(respondedInquiries) %>
+    <% } else { %>
+      <p class="no-inquiries">No responded inquiries.</p>
+    <% } %>
+  </div>
+
+  <!-- Closed Tab -->
+  <div id="closed-tab" class="tab-content">
+    <% if (closedInquiries.length > 0) { %>
+      <%- renderInquiriesTable(closedInquiries) %>
+    <% } else { %>
+      <p class="no-inquiries">No closed inquiries.</p>
+    <% } %>
+  </div>
+</div>
+
+<%
+function renderInquiriesTable(inquiries) {
+  let html = '<div class="inquiries-table-container"><table class="inquiries-table"><thead><tr><th>Status</th><th>Date</th><th>Customer</th><th>Vehicle</th><th>Subject</th><th>Actions</th></tr></thead><tbody>';
+  
+  inquiries.forEach(inquiry => {
+    html += `<tr class="inquiry-row status-${inquiry.inquiry_status}">`;
+    html += `<td><span class="status-badge status-${inquiry.inquiry_status}">${inquiry.inquiry_status.charAt(0).toUpperCase() + inquiry.inquiry_status.slice(1)}</span></td>`;
+    html += `<td class="date-cell">${new Date(inquiry.inquiry_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>`;
+    html += `<td><strong>${inquiry.account_firstname} ${inquiry.account_lastname}</strong><br><small>${inquiry.account_email}</small></td>`;
+    html += `<td>${inquiry.inv_year} ${inquiry.inv_make} ${inquiry.inv_model}</td>`;
+    html += `<td class="subject-cell">${inquiry.inquiry_subject.length > 50 ? inquiry.inquiry_subject.substring(0, 50) + '...' : inquiry.inquiry_subject}</td>`;
+    html += `<td class="actions-cell">`;
+    
+    if (inquiry.inquiry_status === 'pending') {
+      html += `<a href="/inquiry/respond/${inquiry.inquiry_id}" class="action-btn respond-btn">Respond</a>`;
+    } else {
+      html += `<a href="/inquiry/respond/${inquiry.inquiry_id}" class="action-btn view-btn">View</a>`;
+    }
+    
+    html += `<form action="/inquiry/update-status" method="post" style="display: inline;">`;
+    html += `<input type="hidden" name="inquiry_id" value="${inquiry.inquiry_id}">`;
+    html += `<select name="status" onchange="this.form.submit()" class="status-select">`;
+    html += `<option value="pending" ${inquiry.inquiry_status === 'pending' ? 'selected' : ''}>Pending</option>`;
+    html += `<option value="responded" ${inquiry.inquiry_status === 'responded' ? 'selected' : ''}>Responded</option>`;
+    html += `<option value="closed" ${inquiry.inquiry_status === 'closed' ? 'selected' : ''}>Closed</option>`;
+    html += `</select></form></td></tr>`;
+  });
+  
+  html += '</tbody></table></div>';
+  return html;
+}
+%>
+
+<script>
+function showTab(tabName) {
+  // Hide all tabs
+  const tabs = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => tab.classList.remove('active'));
+  
+  // Remove active class from all buttons
+  const buttons = document.querySelectorAll('.tab-btn');
+  buttons.forEach(btn => btn.classList.remove('active'));
+  
+  // Show selected tab
+  document.getElementById(tabName + '-tab').classList.add('active');
+  
+  // Add active class to clicked button
+  event.target.classList.add('active');
+}
+</script>

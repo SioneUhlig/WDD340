@@ -1,0 +1,80 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<div class="my-inquiries-container">
+  <% if (inquiries && inquiries.length > 0) { %>
+    <div class="inquiries-list">
+      <% inquiries.forEach(inquiry => { %>
+        <div class="inquiry-card <%= inquiry.inquiry_status %>">
+          <div class="inquiry-header">
+            <div class="vehicle-info">
+              <img src="<%= inquiry.inv_image %>" alt="<%= inquiry.inv_year %> <%= inquiry.inv_make %> <%= inquiry.inv_model %>" class="inquiry-vehicle-thumb">
+              <div>
+                <h3><%= inquiry.inv_year %> <%= inquiry.inv_make %> <%= inquiry.inv_model %></h3>
+                <p class="inquiry-subject"><strong><%= inquiry.inquiry_subject %></strong></p>
+              </div>
+            </div>
+            <div class="inquiry-status-badge status-<%= inquiry.inquiry_status %>">
+              <%= inquiry.inquiry_status.charAt(0).toUpperCase() + inquiry.inquiry_status.slice(1) %>
+            </div>
+          </div>
+          
+          <div class="inquiry-body">
+            <p class="inquiry-date">
+              <strong>Sent:</strong> <%= new Date(inquiry.inquiry_date).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }) %>
+            </p>
+            
+            <div class="inquiry-message-preview">
+              <p><strong>Your Message:</strong></p>
+              <p><%= inquiry.inquiry_message.length > 150 ? inquiry.inquiry_message.substring(0, 150) + '...' : inquiry.inquiry_message %></p>
+            </div>
+            
+            <% if (inquiry.response_message) { %>
+              <div class="response-preview">
+                <p><strong>Response from <%= inquiry.responder_firstname %> <%= inquiry.responder_lastname %>:</strong></p>
+                <p><%= inquiry.response_message.length > 150 ? inquiry.response_message.substring(0, 150) + '...' : inquiry.response_message %></p>
+                <p class="response-date">
+                  Responded: <%= new Date(inquiry.response_date).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  }) %>
+                </p>
+              </div>
+            <% } else { %>
+              <p class="no-response">Waiting for response...</p>
+            <% } %>
+          </div>
+          
+          <div class="inquiry-actions">
+            <a href="/inquiry/detail/<%= inquiry.inquiry_id %>" class="view-detail-btn">View Full Details</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="no-inquiries">
+      <p>You haven't submitted any inquiries yet.</p>
+      <p><a href="/">Browse our inventory</a> to find a vehicle and send an inquiry.</p>
+    </div>
+  <% } %>
+</div>

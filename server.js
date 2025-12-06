@@ -16,6 +16,7 @@ const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities/")
 const accountRoute = require("./routes/accountRoute")
+const inquiryRoute = require("./routes/inquiryRoute")
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
 
@@ -73,6 +74,9 @@ app.use("/inv", inventoryRoute)
 
 // Account routes
 app.use("/account", accountRoute)
+
+// Inquiry routes
+app.use("/inquiry", inquiryRoute)
 
 // Intentional error route for Task 3
 app.get("/trigger-error", utilities.handleErrors(async (req, res, next) => {
