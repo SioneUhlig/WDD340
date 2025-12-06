@@ -88,7 +88,7 @@
     <% } %>
   </div>
 
-  <% if (inquiry.inquiry_status !== 'closed') { %>
+  <% if (inquiry.inquiry_status !== 'Closed') { %>
     <div class="response-form-section">
       <h2><%= inquiry.response_message ? 'Send Follow-up Response' : 'Send Response' %></h2>
       
@@ -117,7 +117,7 @@
   <% } else { %>
     <div class="closed-message">
       <p><strong>This inquiry has been closed.</strong></p>
-      <p>To respond, please change the status to "Pending" or "Responded" from the inbox.</p>
+      <p>To respond, please change the status to "Pending" or "Resolved" from the inquiry management section below.</p>
     </div>
   <% } %>
 
@@ -128,9 +128,10 @@
       <input type="hidden" name="inquiry_id" value="<%= inquiry.inquiry_id %>">
       <label for="status">Update Status:</label>
       <select name="status" id="status" class="status-select">
-        <option value="pending" <%= inquiry.inquiry_status === 'pending' ? 'selected' : '' %>>Pending</option>
-        <option value="responded" <%= inquiry.inquiry_status === 'responded' ? 'selected' : '' %>>Responded</option>
-        <option value="closed" <%= inquiry.inquiry_status === 'closed' ? 'selected' : '' %>>Closed</option>
+        <option value="Pending" <%= inquiry.inquiry_status === 'Pending' ? 'selected' : '' %>>Pending</option>
+        <option value="In Progress" <%= inquiry.inquiry_status === 'In Progress' ? 'selected' : '' %>>In Progress</option>
+        <option value="Resolved" <%= inquiry.inquiry_status === 'Resolved' ? 'selected' : '' %>>Resolved</option>
+        <option value="Closed" <%= inquiry.inquiry_status === 'Closed' ? 'selected' : '' %>>Closed</option>
       </select>
       <button type="submit" class="update-btn">Update Status</button>
     </form>

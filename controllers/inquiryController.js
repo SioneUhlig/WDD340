@@ -19,7 +19,7 @@ inquiryCont.buildInquiryForm = async function (req, res, next) {
   
   const vehicleName = `${vehicleData.inv_year} ${vehicleData.inv_make} ${vehicleData.inv_model}`
   
-  res.render("./inquiry/inquiry-form", {
+  res.render("inquiry/inquiry-form", {
     title: `Inquiry - ${vehicleName}`,
     nav,
     vehicleData,
@@ -36,6 +36,8 @@ inquiryCont.submitInquiry = async function (req, res) {
   const { vehicle_id, inquiry_subject, inquiry_message } = req.body
   const account_id = res.locals.accountData.account_id
   
+  console.log("Submitting inquiry:", { vehicle_id, account_id, inquiry_subject })
+  
   // Get vehicle data for re-rendering if needed
   const vehicleData = await invModel.getInventoryById(vehicle_id)
   const vehicleName = `${vehicleData.inv_year} ${vehicleData.inv_make} ${vehicleData.inv_model}`
@@ -46,6 +48,8 @@ inquiryCont.submitInquiry = async function (req, res) {
     inquiry_subject,
     inquiry_message
   )
+
+  console.log("Inquiry result:", inquiryResult)
 
   if (inquiryResult) {
     req.flash(
@@ -75,7 +79,7 @@ inquiryCont.buildMyInquiries = async function (req, res, next) {
   const account_id = res.locals.accountData.account_id
   const inquiries = await inquiryModel.getInquiriesByAccountId(account_id)
   
-  res.render("./inquiry/my-inquiries", {
+  res.render("inquiry/my-inquiries", {
     title: "My Inquiries",
     nav,
     inquiries,
@@ -102,7 +106,7 @@ inquiryCont.buildInquiryDetail = async function (req, res, next) {
     return res.redirect("/inquiry/my-inquiries")
   }
   
-  res.render("./inquiry/inquiry-detail", {
+  res.render("inquiry/inquiry-detail", {
     title: "Inquiry Details",
     nav,
     inquiry,
@@ -117,12 +121,22 @@ inquiryCont.buildEmployeeInbox = async function (req, res, next) {
   let nav = await utilities.getNav()
   const inquiries = await inquiryModel.getAllInquiries()
   
-  // Separate inquiries by status for better organization
-  const pendingInquiries = inquiries.filter(i => i.inquiry_status === 'pending')
-  const respondedInquiries = inquiries.filter(i => i.inquiry_status === 'responded')
-  const closedInquiries = inquiries.filter(i => i.inquiry_status === 'closed')
+  console.log("Total inquiries found:", inquiries.length)
+  if (inquiries.length > 0) {
+    console.log("First inquiry status:", inquiries[0].inquiry_status)
+    console.log("First inquiry:", inquiries[0])
+  }
   
-  res.render("./inquiry/employee-inbox", {
+  // Separate inquiries by status for better organization
+  const pendingInquiries = inquiries.filter(i => i.inquiry_status === 'Pending')
+  const respondedInquiries = inquiries.filter(i => i.inquiry_status === 'Resolved' || i.inquiry_status === 'In Progress')
+  const closedInquiries = inquiries.filter(i => i.inquiry_status === 'Closed')
+  
+  console.log("Pending:", pendingInquiries.length)
+  console.log("Responded:", respondedInquiries.length)
+  console.log("Closed:", closedInquiries.length)
+  
+  res.render("inquiry/employee-inbox", {
     title: "Customer Inquiries",
     nav,
     pendingInquiries,
@@ -146,7 +160,7 @@ inquiryCont.buildRespondView = async function (req, res, next) {
     return res.redirect("/inquiry/inbox")
   }
   
-  res.render("./inquiry/respond-inquiry", {
+  res.render("inquiry/respond-inquiry", {
     title: "Respond to Inquiry",
     nav,
     inquiry,
