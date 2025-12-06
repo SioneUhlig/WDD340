@@ -1,34 +1,25 @@
 const pool = require("../database/")
+
 /* *****************************
 *   Create new inquiry
 * *************************** */
 async function createInquiry(vehicle_id, account_id, inquiry_subject, inquiry_message) {
   try {
-    console.log("=== CREATE INQUIRY DEBUG ===")
-    console.log("Params:", { vehicle_id, account_id, inquiry_subject, inquiry_message })
-    
     const sql = `INSERT INTO inquiries 
       (vehicle_id, account_id, inquiry_subject, inquiry_message, inquiry_status, inquiry_date) 
       VALUES ($1, $2, $3, $4, 'Pending', CURRENT_TIMESTAMP) 
       RETURNING *`
-    
-    console.log("SQL:", sql)
-    const result = await pool.query(sql, [vehicle_id, account_id, inquiry_subject, inquiry_message])
-    console.log("Insert result:", result.rows)
-    return result
+    return await pool.query(sql, [vehicle_id, account_id, inquiry_subject, inquiry_message])
   } catch (error) {
-    console.error("CREATE INQUIRY ERROR:", error)
     return error.message
   }
 }
-
 
 /* *****************************
 *   Get all inquiries (for employees)
 * *************************** */
 async function getAllInquiries() {
   try {
-    console.log("=== GET ALL INQUIRIES DEBUG ===")
     const sql = `SELECT 
       i.inquiry_id,
       i.vehicle_id,
@@ -60,17 +51,10 @@ async function getAllInquiries() {
           WHEN 'Closed' THEN 4
         END,
         i.inquiry_date DESC`
-    
-    console.log("Executing getAllInquiries query...")
     const result = await pool.query(sql)
-    console.log("Query result rows:", result.rows.length)
-    if (result.rows.length > 0) {
-      console.log("First inquiry:", result.rows[0])
-    }
     return result.rows
   } catch (error) {
-    console.error("GET ALL INQUIRIES ERROR:", error.message)
-    console.error("Full error:", error)
+    console.error("getAllInquiries error: " + error)
     return []
   }
 }
@@ -152,9 +136,6 @@ async function getInquiryById(inquiry_id) {
 * *************************** */
 async function respondToInquiry(inquiry_id, response_message, responded_by) {
   try {
-    console.log("=== RESPOND TO INQUIRY DEBUG ===")
-    console.log("Params:", { inquiry_id, response_message, responded_by })
-    
     const sql = `UPDATE inquiries 
       SET response_message = $1, 
           response_date = CURRENT_TIMESTAMP, 
@@ -162,44 +143,47 @@ async function respondToInquiry(inquiry_id, response_message, responded_by) {
           inquiry_status = 'Resolved'
       WHERE inquiry_id = $3 
       RETURNING *`
-    
-    console.log("Executing respond query...")
     const result = await pool.query(sql, [response_message, responded_by, inquiry_id])
-    console.log("Response result:", result.rows[0])
     return result.rows[0]
   } catch (error) {
-    console.error("RESPOND TO INQUIRY ERROR:", error.message)
-    console.error("Full error:", error)
+    console.error("respondToInquiry error: " + error)
     return null
   }
 }
+
 /* *****************************
 *   Update inquiry status
 * *************************** */
 async function updateInquiryStatus(inquiry_id, status) {
   try {
-    console.log("=== UPDATE INQUIRY STATUS DEBUG ===")
-    console.log("Params:", { inquiry_id, status })
+    // Map any status to the correct ENUM value
+    const statusMap = {
+      'pending': 'Pending',
+      'Pending': 'Pending',
+      'in progress': 'In Progress',
+      'In Progress': 'In Progress',
+      'resolved': 'Resolved',
+      'Resolved': 'Resolved',
+      'responded': 'Resolved',
+      'Responded': 'Resolved',
+      'closed': 'Closed',
+      'Closed': 'Closed'
+    }
     
-    // Capitalize the first letter to match the ENUM
-    const capitalizedStatus = status.charAt(0).toUpperCase() + status.slice(1)
-    
-    console.log("Capitalized status:", capitalizedStatus)
+    const finalStatus = statusMap[status] || status
     
     const sql = `UPDATE inquiries 
-      SET inquiry_status = $1
+      SET inquiry_status = $1::inquiry_status
       WHERE inquiry_id = $2 
       RETURNING *`
-    
-    const result = await pool.query(sql, [capitalizedStatus, inquiry_id])
-    console.log("Update status result:", result.rows[0])
+    const result = await pool.query(sql, [finalStatus, inquiry_id])
     return result.rows[0]
   } catch (error) {
-    console.error("UPDATE INQUIRY STATUS ERROR:", error.message)
-    console.error("Full error:", error)
+    console.error("updateInquiryStatus error: " + error)
     return null
   }
 }
+
 /* *****************************
 *   Get pending inquiries count
 * *************************** */
@@ -207,7 +191,7 @@ async function getPendingInquiriesCount() {
   try {
     const sql = `SELECT COUNT(*) as count 
       FROM inquiries 
-      WHERE inquiry_status = 'pending'`
+      WHERE inquiry_status = 'Pending'`
     const result = await pool.query(sql)
     return result.rows[0].count
   } catch (error) {
